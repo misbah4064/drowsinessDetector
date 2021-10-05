@@ -1,6 +1,14 @@
 import cv2
 import dlib
 from scipy.spatial import distance
+from pygame import mixer
+
+
+
+
+mixer.init()
+sound = mixer.Sound('alarm.wav')
+
 
 def calculate_EAR(eye):
 	A = distance.euclidean(eye[1], eye[5])
@@ -51,15 +59,22 @@ while True:
 
         EAR = (left_ear+right_ear)/2
         EAR = round(EAR,2)
-        if EAR<0.26:
-        	cv2.putText(frame,"DROWSY",(20,100),
+        if EAR<0.20:
+            try:
+                sound.play()
+            except:  # isplaying = False
+                pass
+
+            cv2.putText(frame,"DROWSY",(20,100),
         		cv2.FONT_HERSHEY_SIMPLEX,3,(0,0,255),4)
-        	cv2.putText(frame,"Are you Sleepy?",(20,400),
+            cv2.putText(frame,"Are you Sleepy?",(20,400),
         		cv2.FONT_HERSHEY_SIMPLEX,2,(0,0,255),4)
-        	print("Drowsy")
+
+
+            print("Drowsy")
         print(EAR)
 
-    cv2.imshow("Are you Sleepy", frame)
+    cv2.imshow("", frame)
 
     key = cv2.waitKey(1)
     if key == 27:
